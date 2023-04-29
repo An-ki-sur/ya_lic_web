@@ -11,6 +11,10 @@ alf = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 ROOT = path.dirname(path.realpath(__file__))
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+@app.template_filter(name='linebreaksbr')
+def linebreaksbr_filter(text):
+    return text.replace('\n', '<br>')
 @app.route('/')
 @app.route('/main')
 def main():
@@ -82,7 +86,7 @@ def reg():
                         flag = cur.execute(f'select * from user_info where link_to_user = "{link}"').fetchall()
                         if not flag:
                             break
-                    cur.execute(f'INSERT INTO user_info (login, pass, link_to_user, name) values ("{login}", "{pas}", "{link}", "{name}")').fetchall()
+                    cur.execute(f"INSERT INTO user_info (login, pass, link_to_user, name) values ('{login}', '{pas}', '{link}', '{name}')").fetchall()
                     con.commit()
                     return '<a href = /log> Регистрация успешна! Теперь войдите в аккаунт </a>'
                 else:
@@ -90,6 +94,21 @@ def reg():
 
         else:
             return render_template('reg.html')
+
+
+@app.route('/del/<postname>')
+def delete_post(postname):
+    if "acc" in session and session['acc'] != "-1":
+        con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+        cur = con.cursor()
+        post = cur.execute(f'select author from posts where post_link = "{postname}"').fetchall()[0]
+        print(session['acc'], str(post[0]))
+        if session['acc'] == str(post[0]):
+            cur.execute(f'''DELETE FROM posts where post_link = "{postname}"''').fetchall()
+            con.commit()
+            return '<a href = /main>Вы удалили пост. Вернуться на главную<a>'
+    return '<a href = /main>Вы не имеете права доступа к этому действию<a>'
+
 @app.route('/user/<username>')
 def profile(username):
     if "acc" in session and session['acc'] != "-1":
@@ -106,7 +125,11 @@ def profile(username):
                     ul.append({})
                     ul[i]['name'] = posts[i][1]
                     ul[i]['link'] = posts[i][4]
-                return render_template('profile.html', name=name, link=link, post_list=ul, author_name=u_id[1])
+                    ul[i]['l'] = (150 - len(posts[i][1])) * '_'
+                if (session['acc'] == str(u_id[0])):
+                    return render_template('self_profile.html', name=name, link=link, post_list=ul, author_name=u_id[1])
+                else:
+                    return render_template('profile.html', name=name, link=link, post_list=ul, author_name=u_id[1])
             else:
                 return '<a href = "/log">Войдите в аккаунт</a>'
         else:
@@ -128,7 +151,7 @@ def new_post():
                     flag = cur.execute(f'select * from posts where post_link = "{link}"').fetchall()
                     if not flag:
                         break
-                cur.execute(f'''INSERT INTO posts(title, text, author, post_link) values ("{flask.request.form['post_name']}", "{flask.request.form['text']}", {session['acc']}, "{link}")''')
+                cur.execute(f'''INSERT INTO posts(title, text, author, post_link) values ('{flask.request.form['post_name']}', '{flask.request.form['text']}', {session['acc']}, '{link}')''')
                 con.commit()
                 return '<a href=/main>Пост создан! Вернуться на главную</a>'
             else:
@@ -153,7 +176,7 @@ def add_com(post_link):
         if post:
             if flask.request.method == 'POST':
                 if flask.request.form['comment']:
-                    cur.execute(f'''INSERT INTO comments (commetator, text, post) VALUES ({session["acc"]}, "{flask.request.form['comment']}", {post[0][0]})''').fetchall()
+                    cur.execute(f'''INSERT INTO comments (commetator, text, post) VALUES ({session["acc"]}, '{flask.request.form['comment']}', {post[0][0]})''').fetchall()
                     con.commit()
 
                     return f"""<p>Вы добавили коммент <a href=/post/{post_link}>вернуться к посту</a></p>
@@ -197,3 +220,4 @@ def post_stran(post_link):
     else:
         return '''<a href = "/log">Войдите в аккаунт<br></a>
     <a href = "/reg">Зарегистрироваться</a>'''
+app.run()

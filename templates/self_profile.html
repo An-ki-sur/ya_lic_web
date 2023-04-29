@@ -1,0 +1,24 @@
+<p style="text-align:right">{{ name }}</p>
+
+<p style="text-align:right"><a href = "/user/{{ link }}">Перейти в свой профиль</a></p>
+
+<p style="text-align:right"><a href = "/new_post">Написать пост</a></p>
+
+<p style="text-align:right"><a href = "/exit">ВЫЙТИ</a></p>
+
+<p style="text-align:right">&nbsp;</p>
+
+<p style="text-align:center"><span style="font-size:26px">{{ author_name }}</span></p>
+
+<p>Посты автора</p>
+
+<hr />
+<ol>
+	{% for item in post_list %}
+	<li><p><a href = "/post/{{item.link}}">{{item.name}}</a>{{item.l}}<a href = /del/{{item.link}}>Удалить этот пост</a></p></li>
+	{% endfor %}
+
+</ol>
+
+<hr />
+<p style="text-align:right"><a href = "/main">На главную</a></p>

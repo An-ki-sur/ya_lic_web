@@ -12,7 +12,10 @@
 <hr />
 <p><span style="font-size:22px">{{ post.name }}</span></p>
 
-<p>{{post.text}}</p>
+{% autoescape false %}
+<p>{{post.text|linebreaksbr}}</p>
+{% endautoescape %}
+
 
 <p>Автор поста: <a href = user/{{ post.author_link }}>{{ post.author }}</a></p>
 
