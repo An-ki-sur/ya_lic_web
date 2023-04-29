@@ -1,0 +1,15 @@
+<p style="text-align:right">{{ name }}</p>
+
+<p style="text-align:right"><a href = "/user/{{ link }}">Перейти в свой профиль</a></p>
+
+<p style="text-align:right"><a href = "/new_post">Написать пост</a></p>
+
+<p style="text-align:right"><a href = "/exit">ВЫЙТИ</a></p>
+
+<p style="text-align:center"><span style="font-size:24px">Добавить коммент</span></p>
+
+<form action="new_post" method = "POST">
+    <p style="text-align:center">Название <input size="110" type = "text" name = "post_name" /></p>
+    <p style="text-align:center"><textarea name="text" cols="115" rows="20"></textarea></p>
+    <p style="text-align:center"><span style="font-size:24px"><input name="add" type="submit" value="добавить" />&nbsp</span></p>
+</form>

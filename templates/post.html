@@ -1,0 +1,33 @@
+<p style="text-align:right">{{ name }}</p>
+
+<p style="text-align:right"><a href = "/user/{{ link }}">Перейти в свой профиль</a></p>
+
+<p style="text-align:right"><a href = "/new_post">Написать пост</a></p>
+
+<p style="text-align:right"><a href = "/exit">ВЫЙТИ</a></p>
+
+
+
+<p style="text-align:right">&nbsp;</p>
+
+<p style="text-align:center"><span style="font-size:26px">{{post.name}}</span></p>
+
+<hr />
+<p>{{post.text}}</p>
+
+<hr />
+<p>Автор поста: <a href = /user/{{ post.author_link }}>{{post.author}}</a></p>
+<hr />
+<p>Комментарии</p>
+
+
+<ul>
+	{% for item in com %}
+    <li><strong><a href=/user/{{item.link}}>{{item.name}}:</a></strong> {{item.text}}</li>
+	{% endfor %}
+</ul>
+
+<hr />
+<p style="text-align:right"><a href="/add_com/{{post.post_link}}">Оставить коммент</a></p>
+
+<p style="text-align:right"><a href = "/main">На главную</a></p>
