@@ -1,0 +1,129 @@
+ .u-section-1 {
+  background-image: linear-gradient(0deg, rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url("images/fon.jpg");
+  background-position: 50% 50%;
+}
+
+.u-section-1 .u-sheet-1 {
+  min-height: 1161px;
+}
+
+.u-section-1 .u-group-1 {
+  width: 1072px;
+  height: auto;
+  background-image: linear-gradient(#a8cc5d, #678036);
+  margin: 223px auto 60px;
+}
+
+.u-section-1 .u-container-layout-1 {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.u-section-1 .u-text-1 {
+  font-weight: 400;
+  margin: 29px auto 0;
+}
+
+.u-section-1 .u-btn-1 {
+  margin: -18px 108px 0 auto;
+  padding: 0;
+}
+
+.u-section-1 .u-btn-2 {
+  margin: -25px 32px 0 auto;
+  padding: 0;
+}
+
+.u-section-1 .u-form-1 {
+  height: 337px;
+  width: 570px;
+  margin: 53px auto 0;
+}
+
+.u-section-1 .u-form-group-2 {
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.u-section-1 .u-btn-3 {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 1px;
+  background-image: none;
+  padding: 10px 35px 10px 34px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 858px;
+  }
+
+  .u-section-1 .u-group-1 {
+    margin-top: 214px;
+    min-height: 575px;
+    margin-right: initial;
+    margin-left: initial;
+    width: auto;
+    height: auto;
+  }
+
+  .u-section-1 .u-container-layout-1 {
+    padding-top: 28px;
+    padding-bottom: 10px;
+  }
+
+  .u-section-1 .u-btn-1 {
+    margin-right: 0;
+  }
+
+  .u-section-1 .u-btn-2 {
+    margin-top: 20px;
+    margin-right: 0;
+  }
+
+  .u-section-1 .u-form-1 {
+    height: 375px;
+    margin-top: 6px;
+  }
+
+  .u-section-1 .u-form-group-2 {
+    border-style: none;
+    margin: 53px 0 0 auto;
+  }
+}
+
+@media (max-width: 991px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 767px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 929px;
+  }
+
+  .u-section-1 .u-group-1 {
+    margin-top: 274px;
+    width: auto;
+    margin-right: initial;
+    margin-left: initial;
+  }
+
+  .u-section-1 .u-form-1 {
+    width: 540px;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-sheet-1 {
+    min-height: 1059px;
+  }
+
+  .u-section-1 .u-form-1 {
+    width: 340px;
+  }
+}
