@@ -626,6 +626,10 @@ def post_stran(post_link):
         encoded_img_data = base64.b64encode(data.getvalue()).decode('utf-8')
 
 
+        
+
+
+
         if post:
             if post[0][10] and f'_{session["acc"]}_' in post[0][10]:
                 like_pic = "heart.png"
