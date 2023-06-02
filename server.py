@@ -714,5 +714,3 @@ def post_stran(post_link):
         return '''<a href = "/log">Войдите в аккаунт<br></a>
     <a href = "/reg">Зарегистрироваться</a>'''
 
-
-app.run()
