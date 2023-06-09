@@ -1,5 +1,8 @@
 function find(){
 text = document.getElementById('text').value
+
+
+
 fetch('/funder/' + text).then(response => response.json()).then(
 function(data){
 document.getElementById("result").innerHTML = data['data'];
@@ -15,12 +18,19 @@ document.getElementById("result").innerHTML = data['data'];
  //  }
 
 
+function scroll(){
+document.getElementById('chatscroll').scrollTop = 10000
+}
 
 function chatUpdate(start)
 {
+
+var c = 0;
 var start = start
-update()
+
 changeChat(start)
+
+
 
 //for(let i = 0; i < a.length; i++)
 // {
@@ -35,15 +45,15 @@ changeChat(start)
 //        })}
 //
 //
-
-
 const interval = setInterval(function()
 {
 
-
 update()
+if (c == 0){
+scroll()}
+c = 1
 
-}, 5000);
+}, 500);
 }
 
 
@@ -78,15 +88,32 @@ update()
 function sendMessage(){
 message = document.getElementById('message').value
 
-   fetch('/newMes/' + message)
+
+
+
+            $.ajax({
+                url: '/newMes',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'value': message }),
+                success: function(response) {
+
+                },
+                error: function(error) {
+
+                }
+            });
+
+
 
 
 update()
+
+
  document.getElementById('message').value = ''
 
 
 }
-
 
 
 

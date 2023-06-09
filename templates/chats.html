@@ -26,7 +26,7 @@
     <meta property="og:title" content="chats">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body  onLoad="chatUpdate({{start}})" class="u-body u-overlap u-overlap-contrast u-overlap-transparent u-xl-mode" data-lang="ru"><header class="u-clearfix u-header u-header" id="sec-8720"><div class="u-clearfix u-sheet u-sheet-1">
+  <body  onLoad="chatUpdate({{start}})"  class="u-body u-overlap u-overlap-contrast u-overlap-transparent u-xl-mode" data-lang="ru"><header class="u-clearfix u-header u-header" id="sec-8720"><div class="u-clearfix u-sheet u-sheet-1">
         <img data-href="/main" class="u-image u-image-circle u-preserve-proportions u-image-1" src="/static/images/avatar5318941676.jpg" alt="" data-image-width="640" data-image-height="640">
         <img class="u-image u-image-circle u-preserve-proportions u-image-2" src="data:image/jpeg;base64,{{ im }}" alt="" data-image-width="1920" data-image-height="1920">
         <a href="/chats" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-2 u-radius-50 u-btn-1">Чаты</a>
@@ -47,25 +47,12 @@
               {% endautoescape %}
           </div>
         </div>
-        <div class="u-container-style u-expanded-width-sm u-expanded-width-xs u-gradient u-group u-radius-50 u-shape-round u-group-4">
+        <div  class="u-container-style u-expanded-width-sm u-expanded-width-xs u-gradient u-group u-radius-50 u-shape-round u-group-4">
           <div class="u-container-layout u-container-layout-4">
-            <div class="content12 u-container-style u-group u-shape-rectangle u-group-5">
+            <div id="chatscroll"  class="content12 u-container-style u-group u-shape-rectangle u-group-5">
               <div id="chat"  class="u-container-layout u-container-layout-5">
 
 
-                <img class="u-image u-image-circle u-preserve-proportions u-image-3" src="/static/images/headshot.jpg" alt="" data-image-width="1920" data-image-height="1920">
-                <div class="u-container-style u-gradient u-group u-radius-50 u-shape-round u-group-6">
-                  <div class="u-container-layout u-container-layout-6">
-                    <p class="u-text u-text-5">Текст сообщения<br>
-                    </p>
-                  </div>
-                </div>
-                <div class="u-container-style u-expanded-width-md u-expanded-width-sm u-gradient u-group u-radius-50 u-shape-round u-group-7">
-                  <div class="u-container-layout u-container-layout-7">
-                    <p class="u-text u-text-6">Текст сообщения<br>
-                    </p>
-                  </div>
-                </div>
 
 
               </div>

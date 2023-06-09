@@ -1,4 +1,5 @@
 import base64
+import codecs
 import io
 import os
 from PIL import Image
@@ -119,8 +120,9 @@ def getchat():
             '''
 
     return {'data' : messageblock}
-@app.route('/newMes/<mes>')
-def newMes(mes):
+@app.route('/newMes', methods=['POST'])
+def newMes():
+    mes = request.get_json()['value']
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
     cur = con.cursor()
     cur.execute(f'''
