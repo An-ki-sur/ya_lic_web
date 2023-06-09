@@ -1,3 +1,6 @@
+var c = 0;
+
+
 function find(){
 text = document.getElementById('text').value
 
@@ -25,7 +28,7 @@ document.getElementById('chatscroll').scrollTop = 10000
 function chatUpdate(start)
 {
 
-var c = 0;
+
 var start = start
 
 changeChat(start)
@@ -49,9 +52,10 @@ const interval = setInterval(function()
 {
 
 update()
+
 if (c == 0){
 scroll()}
-c = 1
+c += 1
 
 }, 500);
 }
@@ -83,6 +87,7 @@ document.getElementById("chat_" + old_id).classList.add('u-group-3')
 document.getElementById("chat_" + old_id).classList.remove('u-group-2')
 setCookie('chat', id, 7)}
 update()
+c = -1
 }
 
 function sendMessage(){
@@ -106,6 +111,7 @@ message = document.getElementById('message').value
 
 
 
+c = -2
 
 update()
 

@@ -58,7 +58,7 @@ def finder(text):
             <h4 class="u-text u-text-1"><a href=/user/{i[3]}>{i[4]}</a></h4>
           </div>
         </div>
-            
+
             '''
         return {'data': render}
     else:
@@ -96,7 +96,7 @@ def getchat():
                   </div>
                 </div>
                 <br>
-            
+
             '''
         else:
             user = cur.execute(f'''
@@ -129,7 +129,7 @@ def newMes():
     insert into messages (user_id, type, data, adress) values ({session['acc']}, "text", "{mes}", {request.cookies.get('chat')})
     ''')
     cur.execute(f'''
-    update user_info 
+    update user_info
     set linked_chats = linked_chats || "_{session['acc']}_"
 where not(linked_chats like "%_{session['acc']}_%") and id = {request.cookies.get('chat')}''')
     con.commit()
@@ -140,7 +140,7 @@ def openChat(id):
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
     cur = con.cursor()
     cur.execute(f'''
-        update user_info 
+        update user_info
         set linked_chats = linked_chats || "_{id}_"
     where not(linked_chats like "%_{id}_%") and id = {session['acc']}''')
     res = make_response(redirect(url_for('chats')))
@@ -179,7 +179,7 @@ def chats():
                 image = base64.b64encode(data.getvalue()).decode('utf-8')
 
                 if c != 0:
-                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">         
+                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">
                 <div id="chat_{chat[0]}" class="u-container-style u-expanded-width u-gradient u-group u-radius-50 u-shape-round u-group-3">
                   <div id="chat1_{chat[0]}"  class="u-container-layout u-container-layout-3">
                         <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{ image }" alt="" data-image-width="1920" data-image-height="1920">
@@ -189,7 +189,7 @@ def chats():
                     </div></a>'''
                 else:
                     cookie = str(chat[0])
-                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">         
+                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">
                 <div id="chat_{chat[0]}" class="u-container-style u-expanded-width u-gradient u-group u-radius-50 u-shape-round u-group-2">
                   <div id="chat1_{chat[0]}"  class="u-container-layout u-container-layout-3">
                         <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{ image }" alt="" data-image-width="1920" data-image-height="1920">
@@ -230,16 +230,16 @@ def addLike(post):
     cur = con.cursor()
     ppost = cur.execute(f'''SELECT * FROM posts where id = {post}''').fetchall()[0]
     if ppost[10] and f"_{session['acc']}_" in ppost[10]:
-        cur.execute(f'''update posts 
+        cur.execute(f'''update posts
 set like_users = "{''.join(ppost[10].split(f"_{session['acc']}_"))}", like = like - 1 where id = {post}''').fetchall()
         im = 'heart1.png'
         con.commit()
     else:
         if ppost[10]:
-            cur.execute(f'''update posts 
+            cur.execute(f'''update posts
             set like_users = "{ppost[10] + f"_{session['acc']}_"}", like = like + 1 where id = {post}''').fetchall()
         else:
-            cur.execute(f'''update posts 
+            cur.execute(f'''update posts
             set like_users = "{f"_{session['acc']}_"}", like = 1 where id = {post}''').fetchall()
         im = 'heart.png'
         con.commit()
@@ -390,12 +390,12 @@ def main():
             posts_segment += f'''
             <div class="u-container-style u-gradient u-group u-radius-36 u-shape-round u-group-1">
           <div class="u-container-layout u-container-layout-1">
-              
+
             <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{encoded_img_data_author}" alt="" data-image-width="5000" data-image-height="5000">
             <h5 class="u-custom-font u-font-lobster u-text u-text-default u-text-2"><a href = /user/{post_author[1]}>{post_author[0]}</a></h5>
             <div class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-1"></div>
             <h4 class="u-align-center u-custom-font u-font-lobster u-text u-text-3"><a href = /post/{r_post[4]}>{r_post[1]}</a></h4>
-            <p class="u-text u-text-4"> 
+            <p class="u-text u-text-4">
             {'<br>'.join(r_post[2].split(s))}
             </p>
             <div class="u-border-3 u-border-grey-dark-1 u-expanded-width u-line u-line-horizontal u-line-2"></div>
@@ -552,7 +552,7 @@ def profile(username):
                         <a href="/del/{posts[i][4]}" class="u-border-none u-btn u-button-style u-none u-btn-2"><span class="u-file-icon u-icon u-text-palette-2-base u-icon-2"><img src="/static/images/3156999-3d0dddf3.png" alt=""></span>&nbsp;
                         </a>
                         <p id="rep{posts[i][0]}" class="u-align-center-sm u-align-center-xs u-custom-font u-font-lobster u-text u-text-3">{posts[i][7]}</p><span class="u-file-icon u-icon u-icon-3"><img src="/static/images/829117.png" alt=""></span>
-                        
+
 <a href="https://nicepage.com/k/awards-website-templates" class="u-border-none u-btn u-button-style u-none u-btn-3"> &nbsp;</a>
                         <p id="like{posts[i][0]}" class="u-align-center-sm u-align-center-xs u-custom-font u-font-lobster u-text u-text-4">{posts[i][5]}</p>
                         <a href="https://nicepage.com/k/awards-website-templates" class="u-border-none u-btn u-button-style u-none u-btn-4"> &nbsp;</a>
@@ -583,8 +583,8 @@ def profile(username):
             <a class="u-border-none u-btn u-button-style u-none u-btn-3"><span class="u-file-icon u-icon u-opacity u-opacity-0 u-text-palette-1-dark-1 u-icon-1"><img  alt=""></span>&nbsp;
             </a>
             <a class="u-border-none u-btn u-button-style u-none u-btn-4"><span class="u-file-icon u-icon u-opacity u-opacity-0 u-text-palette-2-base u-icon-2"><img  alt=""></span>&nbsp;
-            </a>                        
-            
+            </a>
+
           <a href="https://nicepage.com/k/awards-website-templates" class="u-border-none u-btn u-button-style u-none u-btn-5"> &nbsp;</a>
           <p id="rep{posts[i][0]}" class="u-align-center-sm u-align-center-xs u-custom-font u-font-lobster u-text u-text-3">{posts[i][7]}</p><span class="u-file-icon u-icon u-icon-3"><img src="/static/images/829117.png" alt=""></span>
 <a href="https://nicepage.com/k/awards-website-templates" class="u-border-none u-btn u-button-style u-none u-btn-5"> &nbsp;</a>
@@ -648,7 +648,7 @@ def new_post(link_st):
                 else:
                     if flask.request.form['post_name'] and flask.request.form['text']:
                         cur.execute(f'''
-                        update posts 
+                        update posts
                         set title = '{flask.request.form['post_name']}', text='{flask.request.form['text']}' where post_link = "{link_st}"''')
                         con.commit()
                         return redirect(url_for('profile', username=session['link']))
@@ -727,7 +727,7 @@ def add_com(post_link, comment):
                 else:
 
                     cur.execute(f'''
-                    update comments 
+                    update comments
                     set text = "{flask.request.form['comment']}" where id = {comment}''')
                     con.commit()
                     return redirect(url_for('post_stran', post_link=post_link))
@@ -814,7 +814,7 @@ def post_stran(post_link):
         encoded_img_data = base64.b64encode(data.getvalue()).decode('utf-8')
 
 
-        
+
 
 
 
@@ -902,7 +902,3 @@ def post_stran(post_link):
         return '''<a href = "/log">Войдите в аккаунт<br></a>
     <a href = "/reg">Зарегистрироваться</a>'''
 
-
-
-
-app.run()
