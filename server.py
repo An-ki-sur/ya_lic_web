@@ -116,7 +116,7 @@ def getchat():
                     </p>
                   </div>
                 </div>
-
+<br>
             '''
 
     return {'data' : messageblock}
