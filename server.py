@@ -33,6 +33,180 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+@app.route('/funder/<text>')
+def finder(text):
+
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+
+    render = ''
+
+    res = cur.execute(f'''
+        select * from user_info where name like "%{text}%"''').fetchall()
+    if res:
+        for i in res:
+            me = io.BytesIO(i[5])
+            im = Image.open(me)
+            data = io.BytesIO()
+            im.save(data, "JPEG")
+            im = base64.b64encode(data.getvalue()).decode('utf-8')
+            render+= f'''
+                <div class="u-align-center-xs u-container-style u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xs u-gradient u-group u-radius-50 u-shape-round u-group-1">
+          <div class="u-container-layout u-container-layout-1">
+            <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{ im }" alt="" data-image-width="1920" data-image-height="1920">
+            <h4 class="u-text u-text-1"><a href=/user/{i[3]}>{i[4]}</a></h4>
+          </div>
+        </div>
+            
+            '''
+        return {'data': render}
+    else:
+        return {'data': 'Нет результатов поиска'}
+
+@app.route('/findUser', methods=['POST', 'GET'])
+def findUser():
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    user = cur.execute(f'''
+    select * from user_info where id = {session['acc']}''').fetchall()[0]
+    me = io.BytesIO(user[5])
+    im = Image.open(me)
+    data = io.BytesIO()
+    im.save(data, "JPEG")
+    encoded_img_data = base64.b64encode(data.getvalue()).decode('utf-8')
+
+    return render_template('findPage.html', name = session['name'], link=session['link'], im = encoded_img_data)
+
+@app.route('/getchat')
+def getchat():
+    chat_id = request.cookies.get('chat')
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    messageblock = ''''''
+    messages = cur.execute(f'''
+    select * from messages where (user_id={chat_id} and adress = {session['acc']}) or (user_id={session['acc']} and adress = {chat_id})''').fetchall()
+    for i in messages:
+        if str(i[1]) == session['acc']:
+            messageblock += f'''
+                <div class="u-container-style u-expanded-width-md u-expanded-width-sm u-gradient u-group u-radius-50 u-shape-round u-group-7">
+                  <div class="u-container-layout u-container-layout-7">
+                    <p class="u-text u-text-6">{i[3]}<br>
+                    </p>
+                  </div>
+                </div>
+                <br>
+            
+            '''
+        else:
+            user = cur.execute(f'''
+            SELECT * from user_info WHERE id = {i[1]}
+            ''').fetchall()[0]
+            me = io.BytesIO(user[5])
+            im = Image.open(me)
+            data = io.BytesIO()
+            im.save(data, "JPEG")
+            encoded_img_data = base64.b64encode(data.getvalue()).decode('utf-8')
+
+            messageblock += f'''
+                <img data-href = /user/{user[3]} class="u-image u-image-circle u-preserve-proportions u-image-3" src="data:image/jpeg;base64,{encoded_img_data }" alt="" data-image-width="1920" data-image-height="1920">
+                <div class="u-container-style u-gradient u-group u-radius-50 u-shape-round u-group-6">
+                  <div class="u-container-layout u-container-layout-6">
+                    <p class="u-text u-text-5">{i[3]}<br>
+                    </p>
+                  </div>
+                </div>
+
+            '''
+
+    return {'data' : messageblock}
+@app.route('/newMes/<mes>')
+def newMes(mes):
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    cur.execute(f'''
+    insert into messages (user_id, type, data, adress) values ({session['acc']}, "text", "{mes}", {request.cookies.get('chat')})
+    ''')
+    cur.execute(f'''
+    update user_info 
+    set linked_chats = linked_chats || "_{session['acc']}_"
+where not(linked_chats like "%_{session['acc']}_%") and id = {request.cookies.get('chat')}''')
+    con.commit()
+    return 'a'
+
+@app.route('/openChat/<id>')
+def openChat(id):
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    cur.execute(f'''
+        update user_info 
+        set linked_chats = linked_chats || "_{id}_"
+    where not(linked_chats like "%_{id}_%") and id = {session['acc']}''')
+    res = make_response(redirect(url_for('chats')))
+    res.set_cookie('chat', value=id, max_age=None)
+    con.commit()
+    return res
+
+@app.route('/chats')
+def chats():
+        chats = ''''''
+        con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+        cur = con.cursor()
+
+        user = cur.execute(f'''
+        SELECT * from user_info WHERE id = {session['acc']}
+        ''').fetchall()[0]
+        me = io.BytesIO(user[5])
+        im = Image.open(me)
+        data = io.BytesIO()
+        im.save(data, "JPEG")
+        encoded_img_data = base64.b64encode(data.getvalue()).decode('utf-8')
+
+
+
+        c = 0
+        cookie = ''
+        for i in user[-1].split('_'):
+            if i != '':
+                chat = cur.execute(f'''
+                                SELECT * from user_info WHERE id = {i}
+                                ''').fetchall()[0]
+                me = io.BytesIO(chat[5])
+                im = Image.open(me)
+                data = io.BytesIO()
+                im.save(data, "JPEG")
+                image = base64.b64encode(data.getvalue()).decode('utf-8')
+
+                if c != 0:
+                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">         
+                <div id="chat_{chat[0]}" class="u-container-style u-expanded-width u-gradient u-group u-radius-50 u-shape-round u-group-3">
+                  <div id="chat1_{chat[0]}"  class="u-container-layout u-container-layout-3">
+                        <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{ image }" alt="" data-image-width="1920" data-image-height="1920">
+                        <h5 class="u-text u-text-1">{chat[4]}</h5>
+                        <p class="u-text u-text-2"></p><br><br>
+                      </div>
+                    </div></a>'''
+                else:
+                    cookie = str(chat[0])
+                    chats += f'''   <a href=# onclick="changeChat({chat[0]});return false;">         
+                <div id="chat_{chat[0]}" class="u-container-style u-expanded-width u-gradient u-group u-radius-50 u-shape-round u-group-2">
+                  <div id="chat1_{chat[0]}"  class="u-container-layout u-container-layout-3">
+                        <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="data:image/jpeg;base64,{ image }" alt="" data-image-width="1920" data-image-height="1920">
+                        <h5 class="u-text u-text-1">{chat[4]}</h5>
+                        <p class="u-text u-text-2"></p><br><br>
+                      </div>
+                    </div></a>'''
+                c += 1
+        if request.cookies.get('chat'):
+            start = request.cookies.get('chat')
+        else:
+            start = 0
+        res = make_response(render_template('chats.html', chats=chats, name=session['name'], link=session['link'], start = start, im=encoded_img_data))
+
+        if c != 0: #and not request.cookies.get('chat'):
+            res.set_cookie('chat', value=cookie, max_age=None)
+        return res
+
+
 @app.route('/updateLikes/<link>')
 def suggestions(link, requests=None):
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
@@ -251,9 +425,11 @@ def exit():
     return redirect(url_for('main'))
 
 
+
+
+
 @app.route('/log', methods=['POST', 'GET'])
 def login():
-    print(flask.request.method)
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
     if flask.request.method == 'POST':
         cur = con.cursor()
@@ -434,7 +610,7 @@ def profile(username):
                                            pp=pp, im=encoded_img_data)
                 else:
                     return render_template('OtherProfile.html', name=name, link=link, post_list=ul, author_name=u_id[1],
-                                           pp=pp, im1=encoded_img_data, im2=encoded_img_data1)
+                                           pp=pp, im1=encoded_img_data, im2=encoded_img_data1, user_id=u_id[0])
             else:
                 return '<a href = "/log">Войдите в аккаунт</a>'
         else:
@@ -615,7 +791,17 @@ def post_stran(post_link):
 
 
         post = cur.execute(f'select * from posts where post_link = "{post_link}"').fetchall()
+        postauthor = cur.execute(f'''
+        select ava from user_info where id = {post[0][3]}
+''').fetchall()[0][0]
 
+
+        me = io.BytesIO(
+            postauthor)
+        im = Image.open(me)
+        data = io.BytesIO()
+        im.save(data, "JPEG")
+        postPic = base64.b64encode(data.getvalue()).decode('utf-8')
 
         u_id = cur.execute(f'select id, name, ava from user_info where link_to_user = "{session["link"]}"').fetchall()[0]
         me = io.BytesIO(
@@ -707,10 +893,14 @@ def post_stran(post_link):
             author = cur.execute(f'select name, link_to_user from user_info where id={post[3]}').fetchall()[0]
             return render_template('post.html', name=name, link=link, im=encoded_img_data,
                                    like_pic=like_pic, post={'name': post[1], 'text': post[2], 'author': author[0],
-                                         'author_link': author[1], 'post_link': post_link, 'id': post[0]}, com=ul, comT=comT)
+                                         'author_link': author[1], 'post_link': post_link, 'id': post[0]}, com=ul, comT=comT, postPic = postPic)
         else:
             return '<a href = "/main">Такого поста не существует</a>'
     else:
         return '''<a href = "/log">Войдите в аккаунт<br></a>
     <a href = "/reg">Зарегистрироваться</a>'''
 
+
+
+
+app.run()

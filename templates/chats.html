@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="ru"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>chats</title>
+    <link rel="stylesheet" href="/static/nicepage1.css" media="screen">
+<link rel="stylesheet" href="/static/chats.css" media="screen">
+    <script class="u-script" type="text/javascript" src="/static/jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="/static/nicepage.js" defer=""></script>
+    <script  src="/static/chatScript.js"></script>
+    <meta name="generator" content="Nicepage 5.11.4, nicepage.com">
+    <meta name="referrer" content="origin">
+    
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster:400">
+    
+    
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "WebSite5116781"
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="chats">
+    <meta property="og:type" content="website">
+  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body  onLoad="chatUpdate({{start}})" class="u-body u-overlap u-overlap-contrast u-overlap-transparent u-xl-mode" data-lang="ru"><header class="u-clearfix u-header u-header" id="sec-8720"><div class="u-clearfix u-sheet u-sheet-1">
+        <img data-href="/main" class="u-image u-image-circle u-preserve-proportions u-image-1" src="/static/images/avatar5318941676.jpg" alt="" data-image-width="640" data-image-height="640">
+        <img class="u-image u-image-circle u-preserve-proportions u-image-2" src="data:image/jpeg;base64,{{ im }}" alt="" data-image-width="1920" data-image-height="1920">
+        <a href="/chats" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-2 u-radius-50 u-btn-1">Чаты</a>
+        <a href="/exit" class="u-border-none u-btn u-button-style u-none u-btn-2"><span class="u-file-icon u-icon u-icon-1"><img src="/static/images/4034229.png" alt=""></span>&nbsp;
+        </a>
+        <a href="/settings" class="u-border-none u-btn u-button-style u-none u-btn-3"><span class="u-file-icon u-icon u-icon-2"><img src="/static/images/8630019.png" alt=""></span>&nbsp;
+        </a>
+        <h4 class="u-custom-font u-font-lobster u-text u-text-1"><a href="/user/{{link}}">{{name}}</a></h4>
+        <a href="/new_post/new" class="u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-2 u-radius-50 u-btn-4">Написать пост</a>
+      </div></header>
+    <section class="u-clearfix u-image u-shading u-section-1" id="sec-4fed" data-image-width="3440" data-image-height="1920">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <a href="/findUser" class="u-btn u-btn-round u-button-style u-custom-color-1 u-hover-custom-color-2 u-radius-50 u-btn-1" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Найти пользователя</a>
+        <div class="content11 u-container-style u-expanded-width-sm u-expanded-width-xs u-gradient u-group u-radius-50 u-shape-round u-group-1">
+          <div class="u-container-layout u-container-layout-1">
+              {% autoescape false %}
+                {{chats}}
+              {% endautoescape %}
+          </div>
+        </div>
+        <div class="u-container-style u-expanded-width-sm u-expanded-width-xs u-gradient u-group u-radius-50 u-shape-round u-group-4">
+          <div class="u-container-layout u-container-layout-4">
+            <div class="content12 u-container-style u-group u-shape-rectangle u-group-5">
+              <div id="chat"  class="u-container-layout u-container-layout-5">
+
+
+                <img class="u-image u-image-circle u-preserve-proportions u-image-3" src="/static/images/headshot.jpg" alt="" data-image-width="1920" data-image-height="1920">
+                <div class="u-container-style u-gradient u-group u-radius-50 u-shape-round u-group-6">
+                  <div class="u-container-layout u-container-layout-6">
+                    <p class="u-text u-text-5">Текст сообщения<br>
+                    </p>
+                  </div>
+                </div>
+                <div class="u-container-style u-expanded-width-md u-expanded-width-sm u-gradient u-group u-radius-50 u-shape-round u-group-7">
+                  <div class="u-container-layout u-container-layout-7">
+                    <p class="u-text u-text-6">Текст сообщения<br>
+                    </p>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="u-form u-form-1">
+              <form action="" id="form" class="u-clearfix u-form-horizontal u-form-spacing-10 u-inner-form"  name="form" style="padding: 10px;">
+                <div class="u-form-group u-label-none u-form-group-1">
+                  <input type="text" id="message" name="text" class="u-border-custom-color-1 u-input u-input-rectangle u-radius-50">
+                </div>
+                <div class="u-align-right u-form-group u-form-submit u-label-none">
+
+                  <button onclick="sendMessage()" class="u-border-2 u-border-grey-75 u-btn u-button-style u-none u-btn-2"><span class="u-file-icon u-icon u-opacity u-opacity-55 u-text-custom-color-1 u-icon-1"><img src="/static/images/9903638-864bcb09.png" alt=""></span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+  
+</body></html>
