@@ -326,6 +326,11 @@ def settings():
             return render_template('Settings.html', link = session['link'], name=session['name'], im = encoded_img_data)
 
 
+@app.route('/start')
+def start():
+    return render_template('start.html')
+
+
 @app.route('/')
 @app.route('/main')
 def main():
@@ -430,6 +435,16 @@ def exit():
 
 
 
+@app.route('/loginCheck', methods=['POST'])
+def loginCheck():
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    acc = cur.execute(f'''SELECT * FROM user_info WHERE login = "{request.get_json()['login']}" AND pass = "{request.get_json()['pass']}"''').fetchall()
+    if acc:
+        return 'sumbit'
+    else:
+        return 'Неверный логин или пароль'
+
 @app.route('/log', methods=['POST', 'GET'])
 def login():
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
@@ -453,12 +468,23 @@ def login():
             return "error"
 
     else:
-        return render_template('login.html')
+        return render_template('log.html')
+
+
+@app.route('/regCheck', methods=['POST'])
+def regCheck():
+    con = sqlite3.connect(path.join(ROOT, "web_db.db"))
+    cur = con.cursor()
+    acc = cur.execute(f'''SELECT * FROM user_info WHERE login = "{request.get_json()['login']}" or name = "{request.get_json()['pass']}"''').fetchall()
+
+    if acc and acc[0][1] == request.get_json()['login']:
+        return '''Логин занят'''
+    else:
+        return "sumbit"
 
 
 @app.route('/reg', methods=['POST', 'GET'])
 def reg():
-    print(flask.request.form)
     con = sqlite3.connect(path.join(ROOT, "web_db.db"))
     if flask.request.method == 'POST':
         cur = con.cursor()
@@ -470,8 +496,6 @@ def reg():
 
         if acc and acc[0][1] == login:
             return '''<a href = /reg> Логин занят </a>'''
-        elif acc and acc[0][4] == name:
-            return '''<a href = /reg> Имя занято </a>'''
         else:
             if len(pas) >= 8:
                 while True:
@@ -480,11 +504,26 @@ def reg():
                     if not flag:
                         break
 
-                f = sqlite3.Binary(open(os.path.join(app.config['UPLOAD_FOLDER'], 'headshot.jpg'), 'rb').read())
+
+                print(request.files)
+                if request.files['ava'].filename:
+                    file = request.files['ava']
+
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        f = sqlite3.Binary(open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb').read())
+                        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                else:
+                    f = sqlite3.Binary(open(os.path.join(app.config['UPLOAD_FOLDER'], 'headshot.jpg'), 'rb').read())
+
+
+
                 cur.execute(
                     f"INSERT INTO user_info (login, pass, link_to_user, name, ava) values ('{login}', '{pas}', '{link}', '{name}', ?)", (f, )).fetchall()
                 con.commit()
-                return '<a href = /log> Регистрация успешна! Теперь войдите в аккаунт </a>'
+                return redirect(url_for('login'))
             else:
                 return '''<a href = /reg> В пароле должно быть не менее 8 символов </a>'''
 
@@ -614,12 +653,11 @@ def profile(username):
                     return render_template('OtherProfile.html', name=name, link=link, post_list=ul, author_name=u_id[1],
                                            pp=pp, im1=encoded_img_data, im2=encoded_img_data1, user_id=u_id[0])
             else:
-                return '<a href = "/log">Войдите в аккаунт</a>'
+                return render_template('start.html')
         else:
             return "404 error"
     else:
-        return '''<a href = "/log">Войдите в аккаунт<br></a>
-    <a href = "/reg">Зарегистрироваться</a>'''
+        return render_template('start.html')
 
 
 @app.route('/new_post/<link_st>', methods=['POST', 'GET'])
@@ -700,8 +738,7 @@ def new_post(link_st):
                         return render_template('EditPost.html', link_st=link_st, name=name, link=link,
                                                image=encoded_img_data1, text=text, post_name=post_name, title='Изменить')
         else:
-            return '''<a href = "/log">Войдите в аккаунт<br></a>
-        <a href = "/reg">Зарегистрироваться</a>'''
+            return render_template('start.html')
 
 
 @app.route('/add_com/<post_link>/<comment>', methods=['POST', 'GET'])
@@ -753,8 +790,7 @@ def add_com(post_link, comment):
         else:
             return f"<a href = /main> 404 </a>"
     else:
-        return '''<a href = "/log">Войдите в аккаунт<br></a>
-    <a href = "/reg">Зарегистрироваться</a>'''
+        return render_template('start.html')
 
 
 @app.route('/del_comment/<comment>/<post>')
@@ -899,6 +935,5 @@ def post_stran(post_link):
         else:
             return '<a href = "/main">Такого поста не существует</a>'
     else:
-        return '''<a href = "/log">Войдите в аккаунт<br></a>
-    <a href = "/reg">Зарегистрироваться</a>'''
-
+        return render_template('start.html')
+app.run()

@@ -111,7 +111,7 @@ message = document.getElementById('message').value
 
 
 
-c = -2
+c = -1
 
 update()
 
